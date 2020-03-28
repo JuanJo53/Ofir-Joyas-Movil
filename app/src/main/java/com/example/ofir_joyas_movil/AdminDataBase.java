@@ -72,7 +72,6 @@ public class AdminDataBase extends SQLiteOpenHelper{
                 "FOREIGN KEY(cod_Empleado) REFERENCES Empleado(cod_Empleado),"+
                 "FOREIGN KEY(cod_Joya) REFERENCES Joya(cod_Joya))";
         db.execSQL(dbPedido);
-
     }
 
     @Override

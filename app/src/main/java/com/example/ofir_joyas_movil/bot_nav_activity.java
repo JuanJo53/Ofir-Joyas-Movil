@@ -43,7 +43,9 @@ public class bot_nav_activity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Opciones",Toast.LENGTH_LONG).show();
                 break;
             case R.id.mnuSalir:
-                Toast.makeText(getApplicationContext(),"Salir",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Hasta Luego!",Toast.LENGTH_LONG).show();
+                finish();
+                System.exit(0);
                 break;
         }
         return true;

@@ -66,12 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-//        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
-//        SQLiteDatabase db = admin.getWritableDatabase();
-//        db = admin.getWritableDatabase();
-//        db.execSQL("INSERT INTO Empleado (cod_Empleado,Nombre,CI,Cargo,Contraseña,Telefono)" +
-//                "VALUES (1,'Joanna Martinez','12356789','Administrador','123456','60618984')");
-//        db.close();
 
     }
 
@@ -89,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
         ContentValues login = new ContentValues();
-
        try {
 //         Cursor sql = db.rawQuery("SELECT * From Empleado",null);
            Cursor sql = db.rawQuery("Select Nombre, Contraseña " +
