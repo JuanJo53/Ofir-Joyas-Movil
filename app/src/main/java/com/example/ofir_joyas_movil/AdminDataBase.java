@@ -51,8 +51,10 @@ public class AdminDataBase extends SQLiteOpenHelper{
         //Creacion de la Tabla Venta
         String dbVenta="create table Venta("+
                 "cod_Joya int PRIMARY KEY AUTOINCREMENT,"+
-                "fecha_emision text,"+
-                "cod_Cliente text,"+
+                "fecha date,"+
+                "cantidad int,"+
+                "total real,"+
+                "cod_Cliente int,"+
                 "cod_Empleado int,"+
                 "cod_Joya int,"+
                 "FOREIGN KEY(cod_Cliente) REFERENCES Cliente(cod_Cliente),"+
@@ -62,10 +64,11 @@ public class AdminDataBase extends SQLiteOpenHelper{
         //Creacion de la Tabla Pedido
         String dbPedido="create table Pedido("+
                 "cod_Pedido int PRIMARY KEY AUTOINCREMENT,"+
-                "fecha_emision text,"+
-                "fecha_entrega text,"+
-                "descripcion text,"+
-                "cod_Cliente text,"+
+                "fecha_emision date,"+
+                "fecha_entrega date,"+
+                "cantidad int,"+
+                "estatus int,"+
+                "cod_Cliente int,"+
                 "cod_Empleado int,"+
                 "cod_Joya int,"+
                 "FOREIGN KEY(cod_Cliente) REFERENCES Cliente(cod_Cliente),"+

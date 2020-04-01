@@ -1,4 +1,4 @@
-package com.example.ofir_joyas_movil;
+package com.example.ofir_joyas_movil.Entidades;
 
 public class Cliente {
     private int cod_cliente;

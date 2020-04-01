@@ -3,8 +3,7 @@ package com.example.ofir_joyas_movil;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
-import android.content.Intent;
+import android.content.*;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,9 +13,11 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
+
+import com.example.ofir_joyas_movil.Adaptadores.JoyaListAdapter;
+
+import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
     TextView tvusername, tvpassword;

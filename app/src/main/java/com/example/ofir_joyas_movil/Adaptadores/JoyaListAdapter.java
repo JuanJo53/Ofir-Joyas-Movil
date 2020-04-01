@@ -5,13 +5,42 @@ import android.content.*;
 import android.view.*;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
-import com.example.ofir_joyas_movil.Joya;
+import com.example.ofir_joyas_movil.Entidades.Joya;
+import com.example.ofir_joyas_movil.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class JoyaListAdapter extends ArrayAdapter<Joya> {
-    public JoyaListAdapter(@NonNull Context context, int resource, @NonNull List<Joya> objects) {
-        super(context, resource, objects);
+    Context context;
+    ArrayList<Joya>joyas;
+    public JoyaListAdapter(Context context, ArrayList<Joya> joyas) {
+        super(context, R.layout.layout_item_joya, joyas);
+        this.context = context;
+        this.joyas = joyas;
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = layoutInflater.inflate(R.layout.layout_item_joya, parent, false);
+
+        Joya joya = joyas.get(position);
+
+        ImageView imageJoya = (ImageView) view.findViewById(R.id.ivJoya);
+        imageJoya.setImageResource(joya.getFoto());
+
+        TextView tvnombrejoya = (TextView) view.findViewById(R.id.tvNombreJoya);
+        tvnombrejoya.setText(joya.getNombre());
+
+        TextView tvpreciojoya = (TextView) view.findViewById(R.id.tvPrecioJoya);
+        tvpreciojoya.setText(joya.getPrecio().toString());
+
+        TextView tvstockjoya = (TextView) view.findViewById(R.id.tvStockJoya);
+        tvstockjoya.setText(String.valueOf(joya.getStock()));
+        return view;
     }
 }

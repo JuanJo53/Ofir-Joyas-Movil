@@ -1,20 +1,22 @@
-package com.example.ofir_joyas_movil;
+package com.example.ofir_joyas_movil.Entidades;
 
 public class Joya {
     private int cod_joya;
-    private String nombre;
+    private String Nombre;
     private String Metal;
     private Double Peso;
     private Double Precio;
     private int Stock;
+    private int Foto;
 
-    public Joya(int cod_joya, String nombre, String metal, Double peso, Double precio, int stock) {
+    public Joya(int cod_joya, String nombre, String metal, Double peso, Double precio, int stock, int foto) {
         this.cod_joya = cod_joya;
-        this.nombre = nombre;
+        Nombre = nombre;
         Metal = metal;
         Peso = peso;
         Precio = precio;
         Stock = stock;
+        Foto = foto;
     }
 
     public int getCod_joya() {
@@ -26,11 +28,11 @@ public class Joya {
     }
 
     public String getNombre() {
-        return nombre;
+        return Nombre;
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        Nombre = nombre;
     }
 
     public String getMetal() {
@@ -63,5 +65,13 @@ public class Joya {
 
     public void setStock(int stock) {
         Stock = stock;
+    }
+
+    public int getFoto() {
+        return Foto;
+    }
+
+    public void setFoto(int foto) {
+        Foto = foto;
     }
 }

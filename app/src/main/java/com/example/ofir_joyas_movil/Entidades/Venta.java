@@ -1,20 +1,24 @@
-package com.example.ofir_joyas_movil;
+package com.example.ofir_joyas_movil.Entidades;
 
 import java.util.Date;
 
 public class Venta {
     private int cod_vent;
+    private Date fecha_emision;
+    private int cantidad;
+    private Double total;
     private int cod_cliente;
     private int cod_empleado;
     private int cod_joya;
-    private Date fecha_emision;
 
-    public Venta(int cod_vent, int cod_cliente, int cod_empleado, int cod_joya, Date fecha_emision) {
+    public Venta(int cod_vent, Date fecha_emision, int cantidad, Double total, int cod_cliente, int cod_empleado, int cod_joya) {
         this.cod_vent = cod_vent;
+        this.fecha_emision = fecha_emision;
+        this.cantidad = cantidad;
+        this.total = total;
         this.cod_cliente = cod_cliente;
         this.cod_empleado = cod_empleado;
         this.cod_joya = cod_joya;
-        this.fecha_emision = fecha_emision;
     }
 
     public int getCod_vent() {
@@ -23,6 +27,30 @@ public class Venta {
 
     public void setCod_vent(int cod_vent) {
         this.cod_vent = cod_vent;
+    }
+
+    public Date getFecha_emision() {
+        return fecha_emision;
+    }
+
+    public void setFecha_emision(Date fecha_emision) {
+        this.fecha_emision = fecha_emision;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
     public int getCod_cliente() {
@@ -47,13 +75,5 @@ public class Venta {
 
     public void setCod_joya(int cod_joya) {
         this.cod_joya = cod_joya;
-    }
-
-    public Date getFecha_emision() {
-        return fecha_emision;
-    }
-
-    public void setFecha_emision(Date fecha_emision) {
-        this.fecha_emision = fecha_emision;
     }
 }
