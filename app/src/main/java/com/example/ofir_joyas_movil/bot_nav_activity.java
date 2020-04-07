@@ -1,20 +1,58 @@
 package com.example.ofir_joyas_movil;
 
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.io.File;
+
 public class bot_nav_activity extends AppCompatActivity {
+    AlertDialog.Builder aleProd;
+
+    ImageView ivFoto;
+    EditText etcodigo,etnombre,etmetal,etpeso,etprecio,etcantidad,ettipo;
+
+    final int COD_FOTO = 120;
+    final String CARPETA_RAIZ = "MisFotosApp";
+    final String CARPETA_IMAGENES = "imagenes";
+    final String RUTA_IMAGEN = CARPETA_RAIZ + CARPETA_IMAGENES;
+    String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +67,12 @@ public class bot_nav_activity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // PERMISOS PARA ANDROID 6 O SUPERIOR
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,9 +82,78 @@ public class bot_nav_activity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        LayoutInflater inflador;
+        View v;
         switch (item.getItemId()){
-            case R.id.mnuOpciones:
-                Toast.makeText(getApplicationContext(),"Opciones",Toast.LENGTH_LONG).show();
+            case R.id.mnuAgregarJoya:
+                inflador = LayoutInflater.from(this);
+                v = inflador.inflate(R.layout.layout_detalle_joya,null, false);
+                ivFoto = (ImageView)v.findViewById(R.id.imJoyaDet);
+                etcodigo = (EditText)v.findViewById(R.id.etIdJoyaDet);
+
+                etcodigo.setText(String.valueOf(checkJoyaItems()));
+
+                aleProd = new AlertDialog.Builder(this);
+                aleProd.setCancelable(false);
+                aleProd.setView(v);
+                aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
+                    }
+                });
+                aleProd.setNeutralButton("Agregar Joya", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //agregarJoya();
+                        checkTablesDB();
+                    }
+                });
+                aleProd.show();
+                break;
+            case R.id.mnuAgregarVenta:
+                Toast.makeText(getApplicationContext(),"Nueva Venta",Toast.LENGTH_LONG).show();
+
+                inflador = LayoutInflater.from(this);
+                v = inflador.inflate(R.layout.layout_detalle_venta,null, false);
+                aleProd = new AlertDialog.Builder(this);
+                aleProd.setCancelable(false);
+                aleProd.setView(v);
+                aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                aleProd.setNeutralButton("Agregar Venta", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                aleProd.show();
+                break;
+            case R.id.mnuAgregarPedido:
+                Toast.makeText(getApplicationContext(),"Nueva Pedido",Toast.LENGTH_LONG).show();
+
+                inflador = LayoutInflater.from(this);
+                v = inflador.inflate(R.layout.layout_detalle_pedido,null, false);
+                aleProd = new AlertDialog.Builder(this);
+                aleProd.setCancelable(false);
+                aleProd.setView(v);
+                aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                aleProd.setNeutralButton("Agregar Pedido", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                aleProd.show();
                 break;
             case R.id.mnuSalir:
                 Toast.makeText(getApplicationContext(),"Hasta Luego!",Toast.LENGTH_LONG).show();
@@ -49,5 +162,114 @@ public class bot_nav_activity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    public void agregarJoya(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues login = new ContentValues();
+        try {
+            Cursor sql = db.rawQuery("Select COUNT(*)"+
+                            "from Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                Toast.makeText(getApplicationContext(),""+ sql.getString(0),Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(this,bot_nav_activity.class);
+                startActivity(intent);
+            }else{
+                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public int checkJoyaItems(){
+        int cant=0;
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues login = new ContentValues();
+        try {
+            Cursor sql = db.rawQuery("Select COUNT(*)"+
+                            "from Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                Toast.makeText(getApplicationContext(),""+ sql.getString(0),Toast.LENGTH_LONG).show();
+                cant=Integer.parseInt(sql.getString(0)+1);
+            }else{
+                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+        return cant;
+    }
+    public void ocTomaFoto(View v){
+        String nombreImagen = "";
+
+        File fileImagen = new File(Environment.getExternalStorageDirectory(), RUTA_IMAGEN);
+        boolean isCreada = fileImagen.exists();
+
+        if(isCreada == false) {
+            isCreada = fileImagen.mkdirs();
+        }
+
+        if(isCreada == true) {
+            //nombreImagen = (System.currentTimeMillis() / 1000) + ".jpg";
+            nombreImagen = "mifoto.jpg";
+        }
+
+        path = Environment.getExternalStorageDirectory()+File.separator+RUTA_IMAGEN+File.separator+nombreImagen;
+        File imagen = new File(path);
+
+        Intent intent = null;
+        intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            String authorities = this.getPackageName()+".provider";
+            Uri imageUri = FileProvider.getUriForFile(this, authorities, imagen);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        } else {
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(imagen));
+        }
+        startActivityForResult(intent, COD_FOTO);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case COD_FOTO:
+                    MediaScannerConnection.scanFile(this, new String[]{path}, null, new MediaScannerConnection.OnScanCompletedListener() {
+                        @Override
+                        public void onScanCompleted(String path, Uri uri) {
+
+                        }
+                    });
+                    Bitmap bitmap = BitmapFactory.decodeFile(path);
+                    ivFoto.setImageBitmap(bitmap);
+                    break;
+            }
+        }
+    }
+    public void checkTablesDB(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues login = new ContentValues();
+        try {
+            Cursor sql = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';",null);
+            if(sql.moveToFirst()){
+                while ( !sql.isAfterLast() ) {
+                    System.out.println("Table Name=> "+sql.getString(0));
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
     }
 }

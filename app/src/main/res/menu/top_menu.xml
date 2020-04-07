@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/mnuOpciones"
-        android:title="Opciones"
+        android:id="@+id/mnuAgregarJoya"
+        android:title="Agregar Joya"
+        />
+    <item
+        android:id="@+id/mnuAgregarVenta"
+        android:title="Agregar Venta"
+    />
+    <item
+        android:id="@+id/mnuAgregarPedido"
+        android:title="Agregar Pedido"
         />
     <item
         android:id="@+id/mnuSalir"

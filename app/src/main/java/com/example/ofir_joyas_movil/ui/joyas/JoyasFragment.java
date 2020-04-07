@@ -1,8 +1,11 @@
 package com.example.ofir_joyas_movil.ui.joyas;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import com.example.ofir_joyas_movil.Adaptadores.JoyaListAdapter;
 import com.example.ofir_joyas_movil.Entidades.Joya;
 import com.example.ofir_joyas_movil.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
@@ -27,8 +31,9 @@ public class JoyasFragment extends Fragment {
     GridView gridViewJoyas;
     ArrayList<Joya> joyas=new ArrayList<Joya>();
     EditText etidjoya,etnombrejoya,etmetaljoya,etpesojoya,etpreciojoya,etstockjoya;
-    ImageView imjoya;
+    ImageView ivFoto;
     View root;
+    String currentFrag;
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_joyas, container, false);
@@ -51,7 +56,7 @@ public class JoyasFragment extends Fragment {
                 LayoutInflater inflador = LayoutInflater.from(root.getContext());
                 View v = inflador.inflate(R.layout.layout_detalle_joya,null, false);
 
-                imjoya = (ImageView)v.findViewById(R.id.imJoyaDet);
+                ivFoto = (ImageView)v.findViewById(R.id.imJoyaDet);
                 etidjoya = (EditText)v.findViewById(R.id.etIdJoyaDet);
                 etnombrejoya = (EditText)v.findViewById(R.id.etNombreJoyaDet);
                 etmetaljoya = (EditText)v.findViewById(R.id.etMetalJoyaDet);
@@ -59,7 +64,7 @@ public class JoyasFragment extends Fragment {
                 etpreciojoya = (EditText)v.findViewById(R.id.etPrecioJoya);
                 etstockjoya = (EditText)v.findViewById(R.id.etStockJoya);
 
-                imjoya.setImageResource(joya.getFoto());
+                ivFoto.setImageResource(joya.getFoto());
                 etidjoya.setText(String.valueOf(joya.getCod_joya()));
                 etnombrejoya.setText(joya.getNombre());
                 etmetaljoya.setText(joya.getMetal());
