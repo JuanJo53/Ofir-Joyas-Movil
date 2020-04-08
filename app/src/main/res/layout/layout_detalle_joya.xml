@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Peso:"
+            android:text="Peso(gr):"
             android:textStyle="bold"
             />
     </LinearLayout>
@@ -93,6 +93,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="numberDecimal"
             />
     </LinearLayout>
     <LinearLayout
@@ -105,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Precio:"
+            android:text="Precio(Bs):"
             android:textStyle="bold"
             />
         <TextView
@@ -134,16 +135,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="numberDecimal"
             />
         <EditText
             android:id="@+id/etStockJoya"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="number"
             />
-        <EditText
+        <Spinner
             android:id="@+id/etTipoJoya"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />

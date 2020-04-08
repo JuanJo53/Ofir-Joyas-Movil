@@ -13,6 +13,14 @@
         android:title="Agregar Pedido"
         />
     <item
+        android:id="@+id/mnuAgregarCliente"
+        android:title="Agregar Cliente"
+        />
+    <item
+        android:id="@+id/mnuAgregarEmpleado"
+        android:title="Agregar Empleado"
+        />
+    <item
         android:id="@+id/mnuSalir"
         android:title="Cerrar Sesion"
         />

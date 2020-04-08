@@ -86,7 +86,7 @@ public class PedidosFragment extends Fragment {
 
                     }
                 });
-                aleProd.setPositiveButton("Guardar Cambios", new DialogInterface.OnClickListener() {
+                aleProd.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

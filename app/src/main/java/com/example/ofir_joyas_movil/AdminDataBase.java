@@ -22,7 +22,7 @@ public class AdminDataBase extends SQLiteOpenHelper{
         db.execSQL("PRAGMA foreign_keys=ON");
         //Creacion de la Tabla Empleado
         String dbEmpleado="create table Empleado("+
-                "cod_Empleado int PRIMARY KEY,"+
+                "cod_Empleado integer PRIMARY KEY,"+
                 "Nombre text,"+
                 "CI text,"+
                 "Cargo text,"+
@@ -31,7 +31,7 @@ public class AdminDataBase extends SQLiteOpenHelper{
         db.execSQL(dbEmpleado);
         //Creacion de la Tabla Cliente
         String dbCliente="create table Cliente("+
-                "cod_Cliente int PRIMARY KEY AUTOINCREMENT,"+
+                "cod_Cliente integer PRIMARY KEY AUTOINCREMENT,"+
                 "Nombre text,"+
                 "Direccion text,"+
                 "telefono text,"+
@@ -39,44 +39,44 @@ public class AdminDataBase extends SQLiteOpenHelper{
         db.execSQL(dbCliente);
         //Creacion de la Tabla Tipo_Joya
         String dbTipoJoya="create table Tipo_Joya("+
-                "cod_Tipo_Joya int PRIMARY KEY AUTOINCREMENT,"+
+                "cod_Tipo_Joya integer PRIMARY KEY AUTOINCREMENT,"+
                 "tipo text)";
         db.execSQL(dbTipoJoya);
         //Creacion de la Tabla Joya
         String dbJoya="create table Joya("+
-                "cod_Joya int PRIMARY KEY AUTOINCREMENT,"+
+                "cod_Joya integer PRIMARY KEY AUTOINCREMENT,"+
                 "Nombre text,"+
                 "Metal text,"+
                 "Peso real,"+
                 "Precio real,"+
                 "Imagen BLOB,"+
-                "Stock int,"+
-                "cod_Tipo_Joya int,"+
+                "Stock integer,"+
+                "cod_Tipo_Joya integer,"+
                 "FOREIGN KEY(cod_Tipo_Joya) REFERENCES Tipo_Joya(cod_Tipo_Joya))";
         db.execSQL(dbJoya);
         //Creacion de la Tabla Venta
         String dbVenta="create table Venta("+
-                "cod_Joya int PRIMARY KEY AUTOINCREMENT,"+
-                "fecha date,"+
-                "cantidad int,"+
+                "cod_Venta integer PRIMARY KEY AUTOINCREMENT,"+
+                "fecha text,"+
+                "cantidad integer,"+
                 "total real,"+
-                "cod_Cliente int,"+
-                "cod_Empleado int,"+
-                "cod_Joya int,"+
+                "cod_Cliente integer,"+
+                "cod_Empleado integer,"+
+                "cod_Joya integer,"+
                 "FOREIGN KEY(cod_Cliente) REFERENCES Cliente(cod_Cliente),"+
                 "FOREIGN KEY(cod_Empleado) REFERENCES Empleado(cod_Empleado),"+
                 "FOREIGN KEY(cod_Joya) REFERENCES Joya(cod_Joya))";
         db.execSQL(dbVenta);
         //Creacion de la Tabla Pedido
         String dbPedido="create table Pedido("+
-                "cod_Pedido int PRIMARY KEY AUTOINCREMENT,"+
-                "fecha_emision date,"+
-                "fecha_entrega date,"+
-                "cantidad int,"+
-                "estatus int,"+
-                "cod_Cliente int,"+
-                "cod_Empleado int,"+
-                "cod_Joya int,"+
+                "cod_Pedido integer PRIMARY KEY AUTOINCREMENT,"+
+                "fecha_emision text,"+
+                "fecha_entrega text,"+
+                "cantidad integer,"+
+                "estatus integer,"+
+                "cod_Cliente integer,"+
+                "cod_Empleado integer,"+
+                "cod_Joya integer,"+
                 "FOREIGN KEY(cod_Cliente) REFERENCES Cliente(cod_Cliente),"+
                 "FOREIGN KEY(cod_Empleado) REFERENCES Empleado(cod_Empleado),"+
                 "FOREIGN KEY(cod_Joya) REFERENCES Joya(cod_Joya))";

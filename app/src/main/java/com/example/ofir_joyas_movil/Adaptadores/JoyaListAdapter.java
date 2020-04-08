@@ -1,5 +1,7 @@
 package com.example.ofir_joyas_movil.Adaptadores;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.widget.*;
 import android.content.*;
 import android.view.*;
@@ -28,9 +30,9 @@ public class JoyaListAdapter extends ArrayAdapter<Joya> {
         View view = layoutInflater.inflate(R.layout.layout_item_joya, parent, false);
 
         Joya joya = joyas.get(position);
-
+        Bitmap bitmap = BitmapFactory.decodeByteArray(joya.getFoto(),0,joya.getFoto().length);
         ImageView imageJoya = (ImageView) view.findViewById(R.id.ivJoya);
-        imageJoya.setImageResource(joya.getFoto());
+        imageJoya.setImageBitmap(bitmap);
 
         TextView tvnombrejoya = (TextView) view.findViewById(R.id.tvNombreJoya);
         tvnombrejoya.setText(joya.getNombre());

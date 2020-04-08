@@ -2,6 +2,11 @@ package com.example.ofir_joyas_movil.ui.joyas;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.ofir_joyas_movil.Adaptadores.JoyaListAdapter;
+import com.example.ofir_joyas_movil.AdminDataBase;
 import com.example.ofir_joyas_movil.Entidades.Joya;
 import com.example.ofir_joyas_movil.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,16 +40,14 @@ public class JoyasFragment extends Fragment {
     EditText etidjoya,etnombrejoya,etmetaljoya,etpesojoya,etpreciojoya,etstockjoya;
     ImageView ivFoto;
     View root;
+
     String currentFrag;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_joyas, container, false);
 
-        joyas.add(new Joya(1,"Anillo","Oro",3.0,50.0,15,R.drawable.aretes_oro));
-        joyas.add(new Joya(2,"Anillo","Oro",3.0,50.0,15,R.drawable.aretes_oro));
-        joyas.add(new Joya(3,"Anillo","Oro",3.0,50.0,15,R.drawable.aretes_oro));
-        joyas.add(new Joya(4,"Anillo","Oro",3.0,50.0,15,R.drawable.aretes_oro));
-        joyas.add(new Joya(5,"Anillo","Oro",3.0,50.0,15,R.drawable.aretes_oro));
+        getJoyaData();
 
         JoyaListAdapter adapter=new JoyaListAdapter(root.getContext(),joyas);
 
@@ -64,7 +69,8 @@ public class JoyasFragment extends Fragment {
                 etpreciojoya = (EditText)v.findViewById(R.id.etPrecioJoya);
                 etstockjoya = (EditText)v.findViewById(R.id.etStockJoya);
 
-                ivFoto.setImageResource(joya.getFoto());
+                ImageView foto=(ImageView)view.findViewById(R.id.ivJoya);
+                ivFoto.setImageDrawable(foto.getDrawable());
                 etidjoya.setText(String.valueOf(joya.getCod_joya()));
                 etnombrejoya.setText(joya.getNombre());
                 etmetaljoya.setText(joya.getMetal());
@@ -87,7 +93,7 @@ public class JoyasFragment extends Fragment {
 
                     }
                 });
-                aleProd.setPositiveButton("Guardar Cambios", new DialogInterface.OnClickListener() {
+                aleProd.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -97,5 +103,36 @@ public class JoyasFragment extends Fragment {
             }
         });
         return root;
+    }
+    public void getJoyaData(){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        byte[] imagen;
+        try {
+            Cursor sql = db.rawQuery("Select * "+
+                            "from Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                while (!sql.isAfterLast()) {
+                    imagen=sql.getBlob(5);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imagen,0,imagen.length);
+
+                    joyas.add(new Joya(sql.getInt(0),
+                                    sql.getString(1),
+                                    sql.getString(2),
+                                    Double.parseDouble(sql.getString(3)),
+                                    Double.parseDouble(sql.getString(4)),
+                                    Integer.parseInt(sql.getString(6)),
+                                    imagen,
+                                    Integer.parseInt(sql.getString(7))));
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(root.getContext(),"Error",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
     }
 }

@@ -86,14 +86,15 @@ public class MainActivity extends AppCompatActivity {
         ContentValues login = new ContentValues();
        try {
 //         Cursor sql = db.rawQuery("SELECT * From Empleado",null);
-           Cursor sql = db.rawQuery("Select Nombre, Contraseña " +
+           Cursor sql = db.rawQuery("Select Cod_Empleado, Nombre, Contraseña " +
                            "from Empleado " +
                            "where Nombre="+"'"+user+"' "+
                            " and Contraseña="+"'"+pass+"'",
                    null);
            if(sql.moveToFirst()){
-               Toast.makeText(getApplicationContext(),"Bienvenido "+ sql.getString(0),Toast.LENGTH_LONG).show();
+               Toast.makeText(getApplicationContext(),"Bienvenido "+ sql.getString(1),Toast.LENGTH_LONG).show();
                Intent intent = new Intent(this,bot_nav_activity.class);
+               intent.putExtra("CodEmpleado",sql.getInt(0));
                startActivity(intent);
            }else{
                Toast.makeText(getApplicationContext(),"No Logeado",Toast.LENGTH_LONG).show();
