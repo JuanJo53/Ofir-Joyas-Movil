@@ -68,7 +68,7 @@ public class VentaListAdapter extends ArrayAdapter<Venta> {
                     null);
             if(sql.moveToFirst()){
                 ci=sql.getString(0);
-                Toast.makeText(this.context,"CI obtenido!",Toast.LENGTH_LONG).show();
+//                Toast.makeText(this.context,"CI obtenido!",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this.context,"Error al obtener el CI",Toast.LENGTH_LONG).show();
             }
@@ -89,7 +89,7 @@ public class VentaListAdapter extends ArrayAdapter<Venta> {
                     null);
             if(sql.moveToFirst()){
                 nombre=sql.getString(0);
-                Toast.makeText(this.context,"Nombre Joya obtenido!",Toast.LENGTH_LONG).show();
+//                Toast.makeText(this.context,"Nombre Joya obtenido!",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(this.context,"Error al obtener el nombre de la Joya",Toast.LENGTH_LONG).show();
             }
