@@ -14,11 +14,13 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,9 +41,9 @@ public class JoyasFragment extends Fragment {
     ArrayList<Joya> joyas=new ArrayList<Joya>();
     EditText etidjoya,etnombrejoya,etmetaljoya,etpesojoya,etpreciojoya,etstockjoya;
     ImageView ivFoto;
+    Spinner sptipo;
     View root;
-
-    String currentFrag;
+    ArrayList<String> tipos_joya= new ArrayList<String>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class JoyasFragment extends Fragment {
 
         getJoyaData();
 
+        getJoyaTiposSpinner();
         JoyaListAdapter adapter=new JoyaListAdapter(root.getContext(),joyas);
 
         this.gridViewJoyas = (GridView)root.findViewById(R.id.gvJoyas);
@@ -69,6 +72,10 @@ public class JoyasFragment extends Fragment {
                 etpreciojoya = (EditText)v.findViewById(R.id.etPrecioJoya);
                 etstockjoya = (EditText)v.findViewById(R.id.etStockJoya);
 
+                sptipo = (Spinner)v.findViewById(R.id.spTipoJoya);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos_joya);
+                sptipo.setAdapter(adapter);
+
                 ImageView foto=(ImageView)view.findViewById(R.id.ivJoya);
                 ivFoto.setImageDrawable(foto.getDrawable());
                 etidjoya.setText(String.valueOf(joya.getCod_joya()));
@@ -77,6 +84,9 @@ public class JoyasFragment extends Fragment {
                 etpesojoya.setText(joya.getPeso().toString());
                 etpreciojoya.setText(joya.getPrecio().toString());
                 etstockjoya.setText(String.valueOf(joya.getStock()));
+                sptipo.setSelection(joya.getCod_tipo());
+
+                Toast.makeText(root.getContext(),"Tipo: "+joya.getCod_tipo(),Toast.LENGTH_LONG).show();
 
                 aleProd = new AlertDialog.Builder(root.getContext());
                 aleProd.setCancelable(false);
@@ -129,6 +139,27 @@ public class JoyasFragment extends Fragment {
                 }
             }else{
                 Toast.makeText(root.getContext(),"Error",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void getJoyaTiposSpinner(){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            Cursor sql = db.rawQuery("Select tipo "+
+                            "from Tipo_Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                while ( !sql.isAfterLast() ) {
+                    System.out.println("Tipo=> "+sql.getString(0));
+                    tipos_joya.add(sql.getString(0)+"");
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(root.getContext(),"Error al obtener los tipos de joya",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);

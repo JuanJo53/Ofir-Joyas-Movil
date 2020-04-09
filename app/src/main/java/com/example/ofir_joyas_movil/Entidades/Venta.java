@@ -4,14 +4,14 @@ import java.util.Date;
 
 public class Venta {
     private int cod_vent;
-    private Date fecha_emision;
+    private String fecha_emision;
     private int cantidad;
     private Double total;
     private int cod_cliente;
     private int cod_empleado;
     private int cod_joya;
 
-    public Venta(int cod_vent, Date fecha_emision, int cantidad, Double total, int cod_cliente, int cod_empleado, int cod_joya) {
+    public Venta(int cod_vent, String fecha_emision, int cantidad, Double total, int cod_cliente, int cod_empleado, int cod_joya) {
         this.cod_vent = cod_vent;
         this.fecha_emision = fecha_emision;
         this.cantidad = cantidad;
@@ -29,11 +29,11 @@ public class Venta {
         this.cod_vent = cod_vent;
     }
 
-    public Date getFecha_emision() {
+    public String getFecha_emision() {
         return fecha_emision;
     }
 
-    public void setFecha_emision(Date fecha_emision) {
+    public void setFecha_emision(String fecha_emision) {
         this.fecha_emision = fecha_emision;
     }
 

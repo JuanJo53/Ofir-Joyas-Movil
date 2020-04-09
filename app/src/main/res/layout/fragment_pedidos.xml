@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="6"
+        android:weightSum="5"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -50,14 +50,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="EMISION"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ENTREGA"
             android:textStyle="bold"
             android:textAlignment="center"
             />

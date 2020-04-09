@@ -4,15 +4,15 @@ import java.util.Date;
 
 public class Pedido {
     private int cod_pedido;
-    private Date fecha_emision;
-    private Date fecha_entrega;
+    private String fecha_emision;
+    private String fecha_entrega;
     private int cantidad;
     private int estado;
     private int cod_cliente;
     private int cod_empleado;
     private int cod_joya;
 
-    public Pedido(int cod_pedido, Date fecha_emision, Date fecha_entrega, int cantidad, int estado, int cod_cliente, int cod_empleado, int cod_joya) {
+    public Pedido(int cod_pedido, String fecha_emision, String fecha_entrega, int cantidad, int estado, int cod_cliente, int cod_empleado, int cod_joya) {
         this.cod_pedido = cod_pedido;
         this.fecha_emision = fecha_emision;
         this.fecha_entrega = fecha_entrega;
@@ -31,19 +31,19 @@ public class Pedido {
         this.cod_pedido = cod_pedido;
     }
 
-    public Date getFecha_emision() {
+    public String getFecha_emision() {
         return fecha_emision;
     }
 
-    public void setFecha_emision(Date fecha_emision) {
+    public void setFecha_emision(String fecha_emision) {
         this.fecha_emision = fecha_emision;
     }
 
-    public Date getFecha_entrega() {
+    public String getFecha_entrega() {
         return fecha_entrega;
     }
 
-    public void setFecha_entrega(Date fecha_entrega) {
+    public void setFecha_entrega(String fecha_entrega) {
         this.fecha_entrega = fecha_entrega;
     }
 

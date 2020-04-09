@@ -8,7 +8,7 @@ public class Joya {
     private Double Precio;
     private int Stock;
     private byte[] Foto;
-    private int cod_tipo;
+    private int Cod_Tipo;
 
     public Joya(int cod_joya, String nombre, String metal, Double peso, Double precio, int stock, byte[] foto, int cod_tipo) {
         this.cod_joya = cod_joya;
@@ -18,7 +18,7 @@ public class Joya {
         Precio = precio;
         Foto = foto;
         Stock = stock;
-        cod_tipo = cod_joya;
+        Cod_Tipo = cod_tipo;
     }
 
     public int getCod_joya() {
@@ -78,10 +78,10 @@ public class Joya {
     }
 
     public int getCod_tipo() {
-        return cod_tipo;
+        return Cod_Tipo;
     }
 
     public void setCod_tipo(int cod_tipo) {
-        this.cod_tipo = cod_tipo;
+        this.Cod_Tipo = cod_tipo;
     }
 }

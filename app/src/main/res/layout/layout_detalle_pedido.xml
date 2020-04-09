@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="4"
+    android:weightSum="5"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:id="@+id/etCodPedidoDet"
+            android:enabled="false"
             />
     </LinearLayout>
     <LinearLayout
@@ -65,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Empleado:"
+            android:text="CI Empleado:"
             android:textStyle="bold"
             />
         <TextView
@@ -93,12 +94,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:enabled="false"
             />
         <EditText
-            android:id="@+id/etCantidadDet"
+            android:id="@+id/etCantidadDetPed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:inputType="number"
             />
     </LinearLayout>
     <LinearLayout
@@ -106,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="2">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,6 +124,34 @@
             android:text="Fecha Emision:"
             android:textStyle="bold"
             />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Spinner
+            android:id="@+id/spEstado"
+            android:layout_width="138dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+        <EditText
+            android:id="@+id/etFechaEmisionDet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -128,30 +159,14 @@
             android:text="Fecha Entrega:"
             android:textStyle="bold"
             />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:weightSum="3">
-        <EditText
-            android:id="@+id/etEstado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-        <EditText
-            android:id="@+id/etFechaEmisionDet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-        <EditText
+        <DatePicker
             android:id="@+id/etFechaEntregaDet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:datePickerMode="spinner"
+            android:calendarViewShown="false"
+            android:scrollbarSize="2dp"
             />
     </LinearLayout>
 </LinearLayout>

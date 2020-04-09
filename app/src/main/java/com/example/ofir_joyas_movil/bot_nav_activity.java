@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -57,12 +58,18 @@ public class bot_nav_activity extends AppCompatActivity {
 
     ImageView ivFoto;
     EditText etcodigo,etnombre,etmetal,etpeso,etprecio,etcantidad;
+
     EditText etcodventa,etciclienteventa,etnombrejoya,etempleadoventa,etcantidadventa,etcostoventa,etfechaventa;
+
+    EditText etcodpedido,etciclientepedido,etnombrejoyapedido,etempleadopedido,etcantidadpedido,etfechaemision;
+    DatePicker dpentrega;
+
     EditText etcodcliente,etcicliente,etnombrecliente,etdireccioncliente,ettelefonocliente;
     EditText etcodempleado,etciempleado,etnombreempleado,etcargoempleado,ettelefonoempleado,etcontraempelado;
-    Spinner ettipo;
+    Spinner sptipo,spestado;
 
     ArrayList<String> tipos_joya= new ArrayList<String>();
+    ArrayList<String> estadoPedido= new ArrayList<String>();
 
     final int COD_FOTO = 120;
     final String CARPETA_RAIZ = "MisFotosApp";
@@ -88,6 +95,10 @@ public class bot_nav_activity extends AppCompatActivity {
         cod_empleado= bolsa.getInt("CodEmpleado");
 
         getJoyaTiposSpinner();
+        estadoPedido.clear();
+        estadoPedido.add("Por Entregar");
+        estadoPedido.add("Entregado");
+
         // PERMISOS PARA ANDROID 6 O SUPERIOR
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -103,7 +114,11 @@ public class bot_nav_activity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         LayoutInflater inflador;
+        ArrayAdapter<String> adapter;
         View v;
+        Date fechaActual= Calendar.getInstance().getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(fechaActual);
         switch (item.getItemId()){
             case R.id.mnuAgregarJoya:
                 inflador = LayoutInflater.from(this);
@@ -117,9 +132,9 @@ public class bot_nav_activity extends AppCompatActivity {
                 etprecio = (EditText)v.findViewById(R.id.etPrecioJoya);
                 etcantidad = (EditText)v.findViewById(R.id.etStockJoya);
 
-                ettipo = (Spinner)v.findViewById(R.id.etTipoJoya);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, tipos_joya);
-                ettipo.setAdapter(adapter);
+                sptipo = (Spinner)v.findViewById(R.id.spTipoJoya);
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, tipos_joya);
+                sptipo.setAdapter(adapter);
 
                 etcodigo.setText(String.valueOf(checkItemsCant("Joya")+1));
 
@@ -152,14 +167,10 @@ public class bot_nav_activity extends AppCompatActivity {
                 etcostoventa = (EditText)v.findViewById(R.id.etCostoDet);
                 etfechaventa = (EditText)v.findViewById(R.id.etFechaDet);
 
-                etcodventa.setText(String.valueOf(checkItemsCant("Venta")+1));
-
-                Date fechaActual= Calendar.getInstance().getTime();
-                SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-                String formattedDate = df.format(fechaActual);
                 System.out.println("Current time => " +formattedDate);
-                etfechaventa.setText(formattedDate);
 
+                etcodventa.setText(String.valueOf(checkItemsCant("Venta")+1));
+                etfechaventa.setText(formattedDate);
                 etempleadoventa.setText(getCIEmpleado());
 
                 aleProd = new AlertDialog.Builder(this);
@@ -179,10 +190,28 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.show();
                 break;
             case R.id.mnuAgregarPedido:
-                Toast.makeText(getApplicationContext(),"Nueva Pedido",Toast.LENGTH_LONG).show();
-
                 inflador = LayoutInflater.from(this);
                 v = inflador.inflate(R.layout.layout_detalle_pedido,null, false);
+
+                etcodpedido = (EditText)v.findViewById(R.id.etCodPedidoDet);
+                etciclientepedido = (EditText)v.findViewById(R.id.etCIPedidoDet);
+                etnombrejoyapedido = (EditText)v.findViewById(R.id.etJoyaPedDet);
+                etempleadopedido = (EditText)v.findViewById(R.id.etEmpPedDet);
+                etcantidadpedido = (EditText)v.findViewById(R.id.etCantidadDetPed);
+                spestado = (Spinner) v.findViewById(R.id.spEstado);
+                etfechaemision = (EditText)v.findViewById(R.id.etFechaEmisionDet);
+                dpentrega = (DatePicker) v.findViewById(R.id.etFechaEntregaDet);
+
+                sptipo = (Spinner)v.findViewById(R.id.spEstado);
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, estadoPedido);
+                sptipo.setAdapter(adapter);
+
+                System.out.println("Current time => " +formattedDate);
+
+                etcodpedido.setText(String.valueOf(checkItemsCant("Pedido")+1));
+                etempleadopedido.setText(getCIEmpleado());
+                etfechaemision.setText(formattedDate);
+
                 aleProd = new AlertDialog.Builder(this);
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
@@ -195,7 +224,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNeutralButton("Agregar Pedido", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        agregarPedido();
                     }
                 });
                 aleProd.show();
@@ -205,8 +234,8 @@ public class bot_nav_activity extends AppCompatActivity {
                 v = inflador.inflate(R.layout.layout_datos_cliente,null, false);
 
                 etcodcliente = (EditText)v.findViewById(R.id.etCodCliente);
-                etnombrecliente = (EditText)v.findViewById(R.id.etCICliente);
-                etcicliente = (EditText)v.findViewById(R.id.etNombreCliente);
+                etnombrecliente = (EditText)v.findViewById(R.id.etNombreCliente);
+                etcicliente = (EditText)v.findViewById(R.id.etCICliente);
                 etdireccioncliente = (EditText)v.findViewById(R.id.etDireccionCliente);
                 ettelefonocliente = (EditText)v.findViewById(R.id.etTelefonoCliente);
 
@@ -228,7 +257,8 @@ public class bot_nav_activity extends AppCompatActivity {
                     }
                 });
                 aleProd.show();
-                break;case R.id.mnuAgregarEmpleado:
+                break;
+            case R.id.mnuAgregarEmpleado:
                 Toast.makeText(getApplicationContext(),"Nueva Pedido",Toast.LENGTH_LONG).show();
 
                 inflador = LayoutInflater.from(this);
@@ -286,6 +316,14 @@ public class bot_nav_activity extends AppCompatActivity {
             return true;
         }
     }
+    public boolean checkCamposPedido(){
+        if(etciclientepedido.getText().toString().isEmpty()|| etnombrejoyapedido.getText().toString().isEmpty()
+                || etcantidadpedido.getText().toString().isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
+    }
     public boolean checkCamposCliente(){
         if(etnombrecliente.getText().toString().isEmpty()|| etdireccioncliente.getText().toString().isEmpty()
                 || ettelefonocliente.getText().toString().isEmpty() || etcicliente.getText().toString().isEmpty()){
@@ -293,34 +331,6 @@ public class bot_nav_activity extends AppCompatActivity {
         }else{
             return true;
         }
-    }
-    public void getJoyaTiposSpinner(){
-        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
-        SQLiteDatabase db = admin.getWritableDatabase();
-        try {
-            Cursor sql = db.rawQuery("Select tipo "+
-                            "from Tipo_Joya ",
-                    null);
-            if(sql.moveToFirst()){
-                while ( !sql.isAfterLast() ) {
-                    System.out.println("Tipo=> "+sql.getString(0));
-                    tipos_joya.add(sql.getString(0)+"");
-                    sql.moveToNext();
-                }
-            }else{
-                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
-            }
-        }catch (SQLException e){
-            System.out.println(e);
-        }
-        db.close();
-    }
-    public static byte[] imageViewToByte(ImageView image) {
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
     }
     public void agregarJoya(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
@@ -335,8 +345,8 @@ public class bot_nav_activity extends AppCompatActivity {
                 values.put("Precio",Double.parseDouble(etprecio.getText().toString()));
                 values.put("Imagen",imagen);
                 values.put("Stock",Integer.parseInt(etcantidad.getText().toString()));
-                values.put("cod_Tipo_Joya",Integer.parseInt(String.valueOf(ettipo.getSelectedItemPosition())));
-                Toast.makeText(getApplicationContext(),"Datos Guardados",Toast.LENGTH_LONG).show();
+                values.put("cod_Tipo_Joya",Integer.parseInt(String.valueOf(sptipo.getSelectedItemPosition())));
+                Toast.makeText(getApplicationContext(),"Datos de Joya Guardados",Toast.LENGTH_LONG).show();
                 long sql = db.insert("Joya",null,values);
             }else{
                 Toast.makeText(getApplicationContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
@@ -352,12 +362,44 @@ public class bot_nav_activity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         try {
             if(checkCamposCliente()){
-                values.put("Nombre",etnombre.getText().toString());
-                values.put("Direccion",etmetal.getText().toString());
-                values.put("Telefono",etpeso.getText().toString());
-                values.put("CI",etprecio.getText().toString());
+                values.put("Nombre",etnombrecliente.getText().toString());
+                values.put("Direccion",etdireccioncliente.getText().toString());
+                values.put("Telefono",ettelefonocliente.getText().toString());
+                values.put("CI",etcicliente.getText().toString());
                 long sql = db.insert("Cliente",null,values);
-                Toast.makeText(getApplicationContext(),"Datos Guardados",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Datos de Cliente Guardados",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(getApplicationContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void agregarPedido(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String literalMes[]={"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+        int CodCliente=getCodCliente(etciclientepedido.getText().toString());
+        int CodJoya=getCodJoya(etnombrejoyapedido.getText().toString());
+        String fechaEntrega=dpentrega.getDayOfMonth()+"-"+literalMes[dpentrega.getMonth()]+"-"+dpentrega.getYear();
+        try {
+            if(checkCamposPedido()){
+                values.put("fecha_emision",etfechaemision.getText().toString());
+                values.put("fecha_entrega",fechaEntrega);
+                values.put("cantidad",Integer.parseInt(etcantidadpedido.getText().toString()));
+                if(spestado.getSelectedItemPosition()==0){
+                    values.put("estatus",0);
+                }else{
+                    values.put("estatus",1);
+                }
+                values.put("cod_Cliente",CodCliente);
+                values.put("cod_Empleado",cod_empleado);
+                values.put("cod_Joya",CodJoya);
+
+                long sql = db.insert("Pedido",null,values);
+                Toast.makeText(getApplicationContext(),"Datos de Venta Guardados ",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(getApplicationContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
             }
@@ -370,21 +412,19 @@ public class bot_nav_activity extends AppCompatActivity {
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
         ContentValues values = new ContentValues();
-        int CIcliente=getCodCliente(etciclienteventa.getText().toString());
+        int CodCliente=getCodCliente(etciclienteventa.getText().toString());
         int CodJoya=getCodJoya(etnombrejoya.getText().toString());
-
         try {
             if(checkCamposVenta()){
                 values.put("Fecha",etfechaventa.getText().toString());
                 values.put("cantidad",Integer.parseInt(etcantidadventa.getText().toString()));
                 values.put("total",Double.parseDouble(etcostoventa.getText().toString()));
+                values.put("cod_Cliente",CodCliente);
+                values.put("cod_Empleado",cod_empleado);
+                values.put("cod_Joya",CodJoya);
 
-//                values.put("cod_Cliente",Integer.parseInt(etciclienteventa.getText().toString()));
-//                values.put("cod_Empleado",cod_empleado);
-//                values.put("cod_Joya",Integer.parseInt(String.valueOf(etnombrejoya.getSelectedItemPosition())));
-
-//                Toast.makeText(getApplicationContext(),"Datos Guardados ",Toast.LENGTH_LONG).show();
-//                long sql = db.insert("Joya",null,values);
+                long sql = db.insert("Venta",null,values);
+                Toast.makeText(getApplicationContext(),"Datos de Venta Guardados ",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(getApplicationContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
             }
@@ -394,7 +434,7 @@ public class bot_nav_activity extends AppCompatActivity {
         db.close();
     }
     public String getCIEmpleado(){
-        String nombre="";
+        String ci="";
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -404,15 +444,15 @@ public class bot_nav_activity extends AppCompatActivity {
                             "where cod_Empleado=\""+ cod_empleado +"\"",
                     null);
             if(sql.moveToFirst()){
-                nombre=sql.getString(0);
+                ci=sql.getString(0);
             }else{
-                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Error al obtener datos del empleado",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);
         }
         db.close();
-        return nombre;
+        return ci;
     }
     public int getCodJoya(String nombre){
         int cod=0;
@@ -425,10 +465,11 @@ public class bot_nav_activity extends AppCompatActivity {
                             "where Nombre=\""+ nombre +"\"",
                     null);
             if(sql.moveToFirst()){
-                Toast.makeText(getApplicationContext(),""+ sql.getString(0),Toast.LENGTH_LONG).show();
-                cod=Integer.parseInt(sql.getString(0));
+                if(sql.getInt(0)!=0){
+                    cod=sql.getInt(0);
+                }
             }else{
-                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Error Joya no disponible",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);
@@ -446,11 +487,13 @@ public class bot_nav_activity extends AppCompatActivity {
                             " from Cliente"
                             +" where CI=\""+ ci +"\"",
                     null);
-            if(sql.moveToPosition(0)){
-                Toast.makeText(getApplicationContext(),""+ sql.getInt(0),Toast.LENGTH_LONG).show();
-                cod=Integer.parseInt(sql.getString(0));
+            if(sql.moveToFirst()){
+                if(sql.getInt(0)!=0){
+                    cod=sql.getInt(0);
+                    Toast.makeText(getApplicationContext(),"Cod_Cliente: "+ sql.getInt(0),Toast.LENGTH_LONG).show();
+                }
             }else{
-                Toast.makeText(getApplicationContext(),"Agregue al Cliente antes de continuar",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Cliente Nuevo!\nAgreguelo antes de continuar",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);
@@ -468,16 +511,44 @@ public class bot_nav_activity extends AppCompatActivity {
                             "from "+tabla,
                     null);
             if(sql.moveToFirst()){
-                Toast.makeText(getApplicationContext(),""+ sql.getString(0),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Cantidad "+tabla+": "+ sql.getString(0),Toast.LENGTH_LONG).show();
                 cant=Integer.parseInt(sql.getString(0));
             }else{
-                Toast.makeText(getApplicationContext(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Error al buscar la cantidad en la base de datos",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);
         }
         db.close();
         return cant;
+    }
+    public void getJoyaTiposSpinner(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            Cursor sql = db.rawQuery("Select tipo "+
+                            "from Tipo_Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                while ( !sql.isAfterLast() ) {
+                    System.out.println("Tipo=> "+sql.getString(0));
+                    tipos_joya.add(sql.getString(0)+"");
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"Error al obtener los tipos de joya",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public static byte[] imageViewToByte(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
     public void ocTomaFoto(View v){
         String nombreImagen = "";
@@ -532,10 +603,18 @@ public class bot_nav_activity extends AppCompatActivity {
         SQLiteDatabase db = admin.getWritableDatabase();
         ContentValues login = new ContentValues();
         try {
-            Cursor sql = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';",null);
+//            Cursor sql = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table';",null);
+            Cursor sql = db.rawQuery("SELECT * FROM Venta ;",null);
             if(sql.moveToFirst()){
                 while ( !sql.isAfterLast() ) {
-                    System.out.println("Table Name=> "+sql.getString(0));
+//                    System.out.println("Table Name=> "+sql.getString(0));
+                    System.out.println("COD => "+sql.getInt(0));
+                    System.out.println("FECHA => "+sql.getString(1));
+                    System.out.println("CANTIDAD => "+sql.getInt(2));
+                    System.out.println("TOTAL => "+sql.getDouble(3));
+                    System.out.println("CLIENTE => "+sql.getInt(4));
+                    System.out.println("EMPLEADO => "+sql.getInt(5));
+                    System.out.println("JOYA => "+sql.getInt(6));
                     sql.moveToNext();
                 }
             }else{
