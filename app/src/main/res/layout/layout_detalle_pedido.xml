@@ -136,7 +136,8 @@
             android:id="@+id/spEstado"
             android:layout_width="138dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            />
         <EditText
             android:id="@+id/etFechaEmisionDet"
             android:layout_width="wrap_content"

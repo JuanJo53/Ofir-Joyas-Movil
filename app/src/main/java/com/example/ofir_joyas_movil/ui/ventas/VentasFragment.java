@@ -94,12 +94,17 @@ public class VentasFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateVenta();
+                        updateList();
                     }
                 });
                 aleProd.show();
             }
         });
         return root;
+    }
+    public void updateList(){
+        ventas.clear();
+        getVentaData();
     }
     public void updateVenta(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

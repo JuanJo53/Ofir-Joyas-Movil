@@ -82,7 +82,6 @@ public class AdminDataBase extends SQLiteOpenHelper{
                 "FOREIGN KEY(cod_Joya) REFERENCES Joya(cod_Joya))";
         db.execSQL(dbPedido);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS producto");

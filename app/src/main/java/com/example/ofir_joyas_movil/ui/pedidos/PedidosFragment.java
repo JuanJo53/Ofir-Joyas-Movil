@@ -1,5 +1,6 @@
 package com.example.ofir_joyas_movil.ui.pedidos;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -72,8 +73,7 @@ public class PedidosFragment extends Fragment {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, estado);
                 spestado.setAdapter(adapter);
                 etfechaemision = (EditText)v.findViewById(R.id.etFechaEmisionDet);
-                dpfechaentrega = (DatePicker)v.findViewById(R.id.etFechaEntregaDet) ;
-
+                dpfechaentrega = (DatePicker)v.findViewById(R.id.etFechaEntregaDet);
                 etcodigopedido.setText(String.valueOf(pedido.getCod_pedido()));
                 etcliente.setText(getCI(pedido.getCod_cliente(),"Cliente"));
                 etempleado.setText(getCI(pedido.getCod_empleado(),"Empleado"));
@@ -107,13 +107,70 @@ public class PedidosFragment extends Fragment {
                 aleProd.setNeutralButton("Guardar Cambios", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        updatePedido();
+                        updateList();
                     }
                 });
                 aleProd.show();
             }
         });
         return root;
+    }
+    public void updateList(){
+        pedidos.clear();
+        getPedidoData();
+    }
+    public void updatePedido(){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        int codCliente=getCodCliente(etcliente.getText().toString());
+        int codJoya=getCodJoya(etnombrejoya.getText().toString());
+        String fechaEntrega=dpfechaentrega.getDayOfMonth()+"-"+dpfechaentrega.getMonth()+"-"+dpfechaentrega.getYear();
+        try {
+            if(checkCamposPedido()){
+                if(codCliente!=0){
+                    values.put("fecha_emision",etfechaemision.getText().toString());
+                    values.put("fecha_entrega",fechaEntrega);
+                    values.put("cantidad",Integer.parseInt(etcantidad.getText().toString()));
+                    values.put("estatus",spestado.getSelectedItemPosition());
+                    values.put("cod_Cliente",codCliente);
+                    values.put("cod_Joya",codJoya);
+                    db.update("Pedido",values,"cod_Pedido="+etcodigopedido.getText().toString(),null);
+                    Toast.makeText(root.getContext(),"Datos de Pedido Actualizados",Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(root.getContext(),"El cliente no esta registrado",Toast.LENGTH_LONG).show();
+                }
+            }else{
+                Toast.makeText(root.getContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public int getCodJoya(String nombre){
+        int cod=0;
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            Cursor sql = db.rawQuery("Select cod_Joya "+
+                            "from Joya "+
+                            "where Nombre=\""+ nombre +"\"",
+                    null);
+            if(sql.moveToFirst()){
+                if(sql.getInt(0)!=0){
+                    cod=sql.getInt(0);
+                }else{
+                    Toast.makeText(root.getContext(),"Error Joya no disponible",Toast.LENGTH_LONG).show();
+                }
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+        return cod;
     }
     public void getPedidoData(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
@@ -142,6 +199,30 @@ public class PedidosFragment extends Fragment {
             System.out.println(e);
         }
         db.close();
+    }
+    public int getCodCliente(String ci){
+        int cod=0;
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            Cursor sql = db.rawQuery("Select cod_Cliente"+
+                            " from Cliente"
+                            +" where CI=\""+ ci +"\"",
+                    null);
+            if(sql.moveToFirst()){
+                cod=sql.getInt(0);
+                if(sql.getInt(0)!=0){
+                    Toast.makeText(root.getContext(),"Cod_Cliente: "+ sql.getInt(0),Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(root.getContext(),"Cliente Nuevo!\nAgreguelo antes de continuar",Toast.LENGTH_LONG).show();
+                }
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+        return cod;
     }
     public String getCI(int cod, String tabla){
         String ci="";
@@ -182,5 +263,13 @@ public class PedidosFragment extends Fragment {
         }
         db.close();
         return nombre;
+    }
+    public boolean checkCamposPedido(){
+        if(etcliente.getText().toString().isEmpty()|| etnombrejoya.getText().toString().isEmpty()
+                || etcantidad.getText().toString().isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
 }

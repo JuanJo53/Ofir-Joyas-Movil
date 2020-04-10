@@ -133,6 +133,7 @@ public class JoyasFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateJoya();
+                        updateList();
                     }
                 });
                 aleProd.show();
@@ -140,14 +141,18 @@ public class JoyasFragment extends Fragment {
         });
         return root;
     }
+    public void updateList(){
+        joyas.clear();
+        getJoyaData();
+    }
     public void delJoya(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
         try {
             if(checkCamposJoya()){
                 db.delete("Joya","cod_Joya="+etidjoya.getText().toString(),null);
-//                String sql1="DELETE FROM sqlite_sequence WHERE name = 'Joya'";
-//                db.execSQL(sql1);
+                String sql1="DELETE FROM sqlite_sequence WHERE name = 'Joya'";
+                db.execSQL(sql1);
                 Toast.makeText(root.getContext(),"Joya Eliminada",Toast.LENGTH_LONG).show();
             }else{
                 Toast.makeText(root.getContext(),"Joya no se Elimino correctamente",Toast.LENGTH_LONG).show();
