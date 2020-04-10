@@ -66,10 +66,11 @@ public class bot_nav_activity extends AppCompatActivity {
 
     EditText etcodcliente,etcicliente,etnombrecliente,etdireccioncliente,ettelefonocliente;
     EditText etcodempleado,etciempleado,etnombreempleado,etcargoempleado,ettelefonoempleado,etcontraempelado;
-    Spinner sptipo,spestado;
+    Spinner sptipo,spestado,spJoyas;
 
     ArrayList<String> tipos_joya= new ArrayList<String>();
     ArrayList<String> estadoPedido= new ArrayList<String>();
+    ArrayList<String> nombJoyas= new ArrayList<String>();
 
     final int COD_FOTO = 120;
     final String CARPETA_RAIZ = "MisFotosApp";
@@ -95,6 +96,7 @@ public class bot_nav_activity extends AppCompatActivity {
         cod_empleado= bolsa.getInt("CodEmpleado");
 
         getJoyaTiposSpinner();
+        getJoyasNombsSpinner();
         estadoPedido.clear();
         estadoPedido.add("Por Entregar");
         estadoPedido.add("Entregado");
@@ -162,11 +164,15 @@ public class bot_nav_activity extends AppCompatActivity {
                 checkTablesDB();
                 etcodventa = (EditText)v.findViewById(R.id.etCodVentaDet);
                 etciclienteventa = (EditText)v.findViewById(R.id.etCIClienteDet);
-                etnombrejoya = (EditText)v.findViewById(R.id.etNombreJoyaDet);
+                spJoyas = (Spinner) v.findViewById(R.id.etNombreJoyaDet);
                 etempleadoventa = (EditText)v.findViewById(R.id.etEmpleadoDet);
                 etcantidadventa = (EditText)v.findViewById(R.id.etCantidadDet);
                 etcostoventa = (EditText)v.findViewById(R.id.etCostoDet);
                 etfechaventa = (EditText)v.findViewById(R.id.etFechaDet);
+
+                spJoyas = (Spinner)v.findViewById(R.id.etNombreJoyaDet);
+                adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, nombJoyas);
+                spJoyas.setAdapter(adapter);
 
                 System.out.println("Current time => " +formattedDate);
 
@@ -307,8 +313,8 @@ public class bot_nav_activity extends AppCompatActivity {
         }
     }
     public boolean checkCamposVenta(){
-        if(etciclienteventa.getText().toString().isEmpty()|| etnombrejoya.getText().toString().isEmpty()
-                || etcantidadventa.getText().toString().isEmpty() || etcostoventa.getText().toString().isEmpty()){
+        if(etciclienteventa.getText().toString().isEmpty()|| etcantidadventa.getText().toString().isEmpty()
+                || etcostoventa.getText().toString().isEmpty()){
             return false;
         }else{
             return true;
@@ -446,16 +452,15 @@ public class bot_nav_activity extends AppCompatActivity {
         SQLiteDatabase db = admin.getWritableDatabase();
         ContentValues values = new ContentValues();
         int CodCliente=getCodCliente(etciclienteventa.getText().toString());
-        int CodJoya=getCodJoya(etnombrejoya.getText().toString());
         try {
             if(checkCamposVenta()){
-                if(CodCliente!=0 && CodJoya!=0){
+                if(CodCliente!=0 ){
                     values.put("Fecha",etfechaventa.getText().toString());
                     values.put("cantidad",Integer.parseInt(etcantidadventa.getText().toString()));
                     values.put("total",Double.parseDouble(etcostoventa.getText().toString()));
                     values.put("cod_Cliente",CodCliente);
                     values.put("cod_Empleado",cod_empleado);
-                    values.put("cod_Joya",CodJoya);
+                    values.put("cod_Joya",Integer.parseInt(String.valueOf(spJoyas.getSelectedItemPosition()))+1);
 
                     long sql = db.insert("Venta",null,values);
                     Toast.makeText(getApplicationContext(),"Datos de Venta Guardados ",Toast.LENGTH_LONG).show();
@@ -558,6 +563,27 @@ public class bot_nav_activity extends AppCompatActivity {
         }
         db.close();
         return cant;
+    }
+    public void getJoyasNombsSpinner(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            Cursor sql = db.rawQuery("Select Nombre "+
+                            "from Joya ",
+                    null);
+            if(sql.moveToFirst()){
+                while ( !sql.isAfterLast() ) {
+                    System.out.println("Nombre=> "+sql.getString(0));
+                    nombJoyas.add(sql.getString(0)+"");
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(getApplicationContext(),"Error al obtener los tipos de joya",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
     }
     public void getJoyaTiposSpinner(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);

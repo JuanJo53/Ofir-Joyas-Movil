@@ -1,5 +1,6 @@
 package com.example.ofir_joyas_movil.ui.joyas;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -105,6 +106,7 @@ public class JoyasFragment extends Fragment {
                 ImageView foto=(ImageView)view.findViewById(R.id.ivJoya);
                 ivFoto.setImageDrawable(foto.getDrawable());
                 etidjoya.setText(String.valueOf(joya.getCod_joya()));
+//                etidjoya.setEnabled(true);
                 etnombrejoya.setText(joya.getNombre());
                 etmetaljoya.setText(joya.getMetal());
                 etpesojoya.setText(joya.getPeso().toString());
@@ -112,15 +114,13 @@ public class JoyasFragment extends Fragment {
                 etstockjoya.setText(String.valueOf(joya.getStock()));
                 sptipo.setSelection(joya.getCod_tipo());
 
-                Toast.makeText(root.getContext(),"Tipo: "+joya.getCod_tipo(),Toast.LENGTH_LONG).show();
-
                 aleProd = new AlertDialog.Builder(root.getContext());
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
                 aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        delJoya();
                     }
                 });
                 aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -132,13 +132,55 @@ public class JoyasFragment extends Fragment {
                 aleProd.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        updateJoya();
                     }
                 });
                 aleProd.show();
             }
         });
         return root;
+    }
+    public void delJoya(){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            if(checkCamposJoya()){
+                db.delete("Joya","cod_Joya="+etidjoya.getText().toString(),null);
+//                String sql1="DELETE FROM sqlite_sequence WHERE name = 'Joya'";
+//                db.execSQL(sql1);
+                Toast.makeText(root.getContext(),"Joya Eliminada",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(root.getContext(),"Joya no se Elimino correctamente",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void updateJoya(){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        byte[] imagen=imageViewToByte(ivFoto);
+        try {
+            if(checkCamposJoya()){
+                values.put("Nombre",etnombrejoya.getText().toString());
+                values.put("Metal",etmetaljoya.getText().toString());
+                values.put("Peso",Double.parseDouble(etpesojoya.getText().toString()));
+                values.put("Precio",Double.parseDouble(etpreciojoya.getText().toString()));
+                values.put("Imagen",imagen);
+                values.put("Stock",Integer.parseInt(etstockjoya.getText().toString()));
+                values.put("cod_Tipo_Joya",Integer.parseInt(String.valueOf(sptipo.getSelectedItemPosition())));
+
+                db.update("Joya",values,"cod_Joya="+etidjoya.getText().toString(),null);
+                Toast.makeText(root.getContext(),"Datos de Joya Guardados",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(root.getContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
     }
     public void getJoyaData(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
@@ -164,12 +206,21 @@ public class JoyasFragment extends Fragment {
                     sql.moveToNext();
                 }
             }else{
-                Toast.makeText(root.getContext(),"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(root.getContext(),"Error al obtener datos de la joya",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);
         }
         db.close();
+    }
+    public boolean checkCamposJoya(){
+        if(etnombrejoya.getText().toString().isEmpty()|| etmetaljoya.getText().toString().isEmpty()
+                ||etpesojoya.getText().toString().isEmpty() || etpreciojoya.getText().toString().isEmpty()
+                || etstockjoya.getText().toString().isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
     }
     public void getJoyaTiposSpinner(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

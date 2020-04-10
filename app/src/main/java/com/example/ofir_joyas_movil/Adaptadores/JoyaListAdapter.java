@@ -38,7 +38,7 @@ public class JoyaListAdapter extends ArrayAdapter<Joya> {
         tvnombrejoya.setText(joya.getNombre());
 
         TextView tvpreciojoya = (TextView) view.findViewById(R.id.tvPrecioJoya);
-        tvpreciojoya.setText(joya.getPrecio().toString());
+        tvpreciojoya.setText(joya.getPrecio().toString()+"Bs.");
 
         TextView tvstockjoya = (TextView) view.findViewById(R.id.tvStockJoya);
         tvstockjoya.setText(String.valueOf(joya.getStock()));

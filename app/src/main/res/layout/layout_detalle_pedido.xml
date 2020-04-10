@@ -85,7 +85,7 @@
         android:weightSum="3">
         <EditText
             android:id="@+id/etJoyaPedDet"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />

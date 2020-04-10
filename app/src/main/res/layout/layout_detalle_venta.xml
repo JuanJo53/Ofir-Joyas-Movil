@@ -68,9 +68,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
-        <EditText
+        <Spinner
             android:id="@+id/etNombreJoyaDet"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />

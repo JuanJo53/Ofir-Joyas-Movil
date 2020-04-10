@@ -98,19 +98,13 @@ public class PedidosFragment extends Fragment {
                 aleProd = new AlertDialog.Builder(root.getContext());
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
-                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+                aleProd.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 });
-                aleProd.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                aleProd.setNeutralButton("Guardar Cambios", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
