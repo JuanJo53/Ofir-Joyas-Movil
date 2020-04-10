@@ -1,4 +1,4 @@
-package com.example.ofir_joyas_movil.ui.joyas;
+package com.example.ofir_joyas_movil.ui;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -123,17 +123,17 @@ public class JoyasFragment extends Fragment {
                         delJoya();
                     }
                 });
-                aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-                aleProd.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                aleProd.setNeutralButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         updateJoya();
                         updateList();
+                    }
+                });
+                aleProd.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
                     }
                 });
                 aleProd.show();

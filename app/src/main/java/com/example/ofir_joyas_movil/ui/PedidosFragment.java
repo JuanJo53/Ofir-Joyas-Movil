@@ -1,4 +1,4 @@
-package com.example.ofir_joyas_movil.ui.pedidos;
+package com.example.ofir_joyas_movil.ui;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;

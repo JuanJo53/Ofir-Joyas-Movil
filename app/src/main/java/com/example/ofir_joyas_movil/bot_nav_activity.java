@@ -2,7 +2,6 @@ package com.example.ofir_joyas_movil;
 
 import android.Manifest;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,7 +11,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -23,16 +21,20 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.ofir_joyas_movil.Entidades.Joya;
-import com.example.ofir_joyas_movil.ui.joyas.JoyasFragment;
+import com.example.ofir_joyas_movil.Adaptadores.ClienteListAdapter;
+import com.example.ofir_joyas_movil.Entidades.Cliente;
+import com.example.ofir_joyas_movil.Entidades.Venta;
+import com.example.ofir_joyas_movil.ui.JoyasFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -56,6 +58,7 @@ import java.util.Date;
 
 public class bot_nav_activity extends AppCompatActivity {
     AlertDialog.Builder aleProd;
+    GridView gridViewClientes;
 
     ImageView ivFoto;
     EditText etcodigo,etnombre,etmetal,etpeso,etprecio,etcantidad;
@@ -253,6 +256,18 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd = new AlertDialog.Builder(this);
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
+
+                ArrayList<Cliente> clientes=new ArrayList<Cliente>();
+                ClienteListAdapter clienteAdapter=new ClienteListAdapter(v.getContext(),clientes);
+                this.gridViewClientes=(GridView)v.findViewById(R.id.gvClientes) ;
+                this.gridViewClientes.setAdapter(clienteAdapter);
+                this.gridViewClientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    }
+                });
+
                 aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

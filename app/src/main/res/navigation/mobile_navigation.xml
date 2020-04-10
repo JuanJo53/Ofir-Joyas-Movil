@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.ofir_joyas_movil.ui.joyas.JoyasFragment"
+        android:name="com.example.ofir_joyas_movil.ui.JoyasFragment"
         android:label="Joyas"
         tools:layout="@layout/fragment_joyas" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.ofir_joyas_movil.ui.ventas.VentasFragment"
+        android:name="com.example.ofir_joyas_movil.ui.VentasFragment"
         android:label="Ventas"
         tools:layout="@layout/fragment_ventas" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.ofir_joyas_movil.ui.pedidos.PedidosFragment"
+        android:name="com.example.ofir_joyas_movil.ui.PedidosFragment"
         android:label="Pedidos"
         tools:layout="@layout/fragment_pedidos" />
 </navigation>
