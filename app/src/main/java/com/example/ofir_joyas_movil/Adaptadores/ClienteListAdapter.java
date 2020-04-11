@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 public class ClienteListAdapter extends ArrayAdapter<Cliente> {
     Context context;
     ArrayList<Cliente> clientes;
-    GridView gridViewVentas;
     public ClienteListAdapter(Context context, ArrayList<Cliente> clientes) {
         super(context, R.layout.layout_item_cliente,clientes);
         this.context=context;
@@ -48,5 +46,4 @@ public class ClienteListAdapter extends ArrayAdapter<Cliente> {
 
         return view;
     }
-
 }

@@ -15,6 +15,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +42,7 @@ import java.util.Date;
 public class VentasFragment extends Fragment {
     View root;
     AlertDialog.Builder aleProd;
-    GridView gridViewVentas;
+    ListView listViewVentas;
     ArrayList<Venta> ventas=new ArrayList<Venta>();
     ArrayList<String> nombJoyas= new ArrayList<String>();
     EditText etcodigoventa,etcliente,etempleado,etcantidad,etcosto,etfecha;
@@ -54,12 +56,12 @@ public class VentasFragment extends Fragment {
         getJoyasNombsSpinner();
         VentaListAdapter adapter=new VentaListAdapter(root.getContext(),ventas);
 
-        this.gridViewVentas = (GridView)root.findViewById(R.id.gvVentas);
-        this.gridViewVentas.setAdapter(adapter);
-        this.gridViewVentas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listViewVentas = (ListView)root.findViewById(R.id.lvVentas);
+        this.listViewVentas.setAdapter(adapter);
+        this.listViewVentas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Venta venta = ventas.get(position);
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                final Venta venta = ventas.get(position);
                 LayoutInflater inflador = LayoutInflater.from(root.getContext());
                 View v = inflador.inflate(R.layout.layout_detalle_venta,null, false);
                 etcodigoventa = (EditText)v.findViewById(R.id.etCodVentaDet);
@@ -90,6 +92,12 @@ public class VentasFragment extends Fragment {
 
                     }
                 });
+//                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        delVenta(venta.getCod_vent());
+//                    }
+//                });
                 aleProd.setNeutralButton("Guardar Cambios", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -105,6 +113,11 @@ public class VentasFragment extends Fragment {
     public void updateList(){
         ventas.clear();
         getVentaData();
+    }
+    public void delVenta(int cod){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        db.delete("Venta","cod_Venta='"+cod+"'",null);
     }
     public void updateVenta(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

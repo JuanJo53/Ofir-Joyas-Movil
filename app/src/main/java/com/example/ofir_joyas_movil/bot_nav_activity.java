@@ -28,11 +28,14 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.ofir_joyas_movil.Adaptadores.ClienteListAdapter;
+import com.example.ofir_joyas_movil.Adaptadores.EmpleadoListAdapter;
 import com.example.ofir_joyas_movil.Entidades.Cliente;
+import com.example.ofir_joyas_movil.Entidades.Empleado;
 import com.example.ofir_joyas_movil.Entidades.Venta;
 import com.example.ofir_joyas_movil.ui.JoyasFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -58,7 +61,7 @@ import java.util.Date;
 
 public class bot_nav_activity extends AppCompatActivity {
     AlertDialog.Builder aleProd;
-    GridView gridViewClientes;
+    ListView listViewClientes,listViewEmpleados;
 
     ImageView ivFoto;
     EditText etcodigo,etnombre,etmetal,etpeso,etprecio,etcantidad;
@@ -75,6 +78,9 @@ public class bot_nav_activity extends AppCompatActivity {
     ArrayList<String> tipos_joya= new ArrayList<String>();
     ArrayList<String> estadoPedido= new ArrayList<String>();
     ArrayList<String> nombJoyas= new ArrayList<String>();
+    ArrayList<Cliente> clientes= new ArrayList<Cliente>();
+    ArrayList<Empleado> empleados= new ArrayList<Empleado>();
+
 
     final int COD_FOTO = 120;
     final String CARPETA_RAIZ = "MisFotosApp";
@@ -101,6 +107,9 @@ public class bot_nav_activity extends AppCompatActivity {
 
         getJoyaTiposSpinner();
         getJoyasNombsSpinner();
+        getClientesData();
+        getEmpleadosData();
+
         estadoPedido.clear();
         estadoPedido.add("Por Entregar");
         estadoPedido.add("Entregado");
@@ -153,6 +162,12 @@ public class bot_nav_activity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
+//                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delByCod(Integer.parseInt(etcodigo.getText().toString()),"Joya");
+//                    }
+//                });
                 aleProd.setNeutralButton("Agregar Joya", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -191,6 +206,12 @@ public class bot_nav_activity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
+//                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delByCod(Integer.parseInt(etcodventa.getText().toString()),"Venta");
+//                    }
+//                });
                 aleProd.setNeutralButton("Agregar Venta", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -233,6 +254,12 @@ public class bot_nav_activity extends AppCompatActivity {
 
                     }
                 });
+//                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delByCod(Integer.parseInt(etcodpedido.getText().toString()),"Pedido");
+//                    }
+//                });
                 aleProd.setNeutralButton("Agregar Pedido", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -250,34 +277,54 @@ public class bot_nav_activity extends AppCompatActivity {
                 etcicliente = (EditText)v.findViewById(R.id.etCICliente);
                 etdireccioncliente = (EditText)v.findViewById(R.id.etDireccionCliente);
                 ettelefonocliente = (EditText)v.findViewById(R.id.etTelefonoCliente);
+                listViewClientes=(ListView)v.findViewById(R.id.lvClientes);
 
                 etcodcliente.setText(String.valueOf(checkItemsCant("Cliente")+1));
+
+                ClienteListAdapter clienteAdapter=new ClienteListAdapter(v.getContext(),clientes);
+                listViewClientes.setAdapter(clienteAdapter);
+                listViewClientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        etcodcliente.setEnabled(true);
+                        etcodcliente.setText((String.valueOf(clientes.get(position).getCod_cliente())));
+                        etnombrecliente.setText((String.valueOf(clientes.get(position).getNombre())));
+                        etcicliente.setText((String.valueOf(clientes.get(position).getCi())));
+                        etdireccioncliente.setText((String.valueOf(clientes.get(position).getDireccion())));
+                        ettelefonocliente.setText((String.valueOf(clientes.get(position).getTelefono())));
+                    }
+                });
 
                 aleProd = new AlertDialog.Builder(this);
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
-
-                ArrayList<Cliente> clientes=new ArrayList<Cliente>();
-                ClienteListAdapter clienteAdapter=new ClienteListAdapter(v.getContext(),clientes);
-                this.gridViewClientes=(GridView)v.findViewById(R.id.gvClientes) ;
-                this.gridViewClientes.setAdapter(clienteAdapter);
-                this.gridViewClientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    }
-                });
-
-                aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                aleProd.setNegativeButton("Guardar Cambios", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        updateCliente();
+                        updateClienteList();
                     }
                 });
-                aleProd.setNeutralButton("Agregar Cliente", new DialogInterface.OnClickListener() {
+                aleProd.setPositiveButton("Agregar Cliente", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if(!etcodcliente.isEnabled()){
+                            agregarCliente();
+                            updateClienteList();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Esta editando un cliente!",Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+//                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delByCod(Integer.parseInt(etcodcliente.getText().toString()),"Cliente");
+//                    }
+//                });
+                aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        agregarCliente();
                     }
                 });
                 aleProd.show();
@@ -291,22 +338,56 @@ public class bot_nav_activity extends AppCompatActivity {
                 etcargoempleado = (EditText)v.findViewById(R.id.etCargoEmpleado);
                 ettelefonoempleado = (EditText)v.findViewById(R.id.etTelefonoEmpleado);
                 etcontraempelado = (EditText)v.findViewById(R.id.etContraEmpleado);
+                listViewEmpleados=(ListView)v.findViewById(R.id.lvEmpleados);
 
                 etcodempleado.setText(String.valueOf(checkItemsCant("Empleado")+1));
+
+                EmpleadoListAdapter empleadoAdapter=new EmpleadoListAdapter(v.getContext(),empleados);
+                listViewEmpleados.setAdapter(empleadoAdapter);
+                listViewEmpleados.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        etcodempleado.setEnabled(true);
+                        etcodempleado.setText((String.valueOf(empleados.get(position).getCod_Empleado())));
+                        etnombreempleado.setText((String.valueOf(empleados.get(position).getNombre())));
+                        etciempleado.setText((String.valueOf(empleados.get(position).getCI())));
+                        etcargoempleado.setText((String.valueOf(empleados.get(position).getCargo())));
+                        ettelefonoempleado.setText((String.valueOf(empleados.get(position).getTelefono())));
+                        etcontraempelado.setText((String.valueOf(empleados.get(position).getContraseña())));
+                    }
+                });
 
                 aleProd = new AlertDialog.Builder(this);
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
-                aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 });
-                aleProd.setNeutralButton("Agregar Empleado", new DialogInterface.OnClickListener() {
+                aleProd.setNegativeButton("Guardar Cambios", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        updateEmpleado();
+                        updateEmpleadoList();
+                    }
+                });
+//                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delByCod(Integer.parseInt(etcodempleado.getText().toString()),"Empleado");
+//                    }
+//                });
+                aleProd.setPositiveButton("Agregar Empleado", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        agregarEmpleado();
+                        if(!etcodempleado.isEnabled()){
+                            agregarEmpleado();
+                            updateEmpleadoList();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Esta editando un empleado!",Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
                 aleProd.show();
@@ -361,6 +442,59 @@ public class bot_nav_activity extends AppCompatActivity {
         }else{
             return true;
         }
+    }
+    public void updateClienteList(){
+        clientes.clear();
+        getClientesData();
+    }
+    public void updateEmpleadoList(){
+        empleados.clear();
+        getEmpleadosData();
+    }
+    public void delByCod(int cod,String tabla){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        db.delete(tabla,"cod_"+tabla+"='"+cod+"'",null);
+    }
+    public void updateEmpleado(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            if(checkCamposEmpleado()){
+                values.put("Nombre",etnombreempleado.getText().toString());
+                values.put("CI",etciempleado.getText().toString());
+                values.put("Telefono",ettelefonoempleado.getText().toString());
+                values.put("Cargo",etcargoempleado.getText().toString());
+                db.update("Empleado",values,"cod_Empleado='"+etcodempleado.getText().toString()+"'",null);
+                Toast.makeText(this,"Datos de Empleado Actualizados!",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this,"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void updateCliente(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            if(checkCamposCliente()){
+                values.put("Nombre",etnombrecliente.getText().toString());
+                values.put("CI",etcicliente.getText().toString());
+                values.put("Telefono",ettelefonocliente.getText().toString());
+                values.put("Direccion",etdireccioncliente.getText().toString());
+                db.update("Cliente",values,"cod_Cliente='"+etcodcliente.getText().toString()+"'",null);
+                Toast.makeText(this,"Datos de Cliente Actualizados!",Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(this,"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
     }
     public void agregarJoya(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
@@ -500,6 +634,57 @@ public class bot_nav_activity extends AppCompatActivity {
                 }
             }else{
                 Toast.makeText(getApplicationContext(),"Debe llenar todos los campos",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void getClientesData(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            Cursor sql = db.rawQuery("Select * "+
+                            "from Cliente ",
+                    null);
+            if(sql.moveToFirst()){
+                while (!sql.isAfterLast()) {
+                    clientes.add(new Cliente(
+                            sql.getInt(0),
+                            sql.getString(1),
+                            sql.getString(2),
+                            sql.getString(3),
+                            sql.getString(4)));
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(this,"Error al obtener los datos de los clientes",Toast.LENGTH_LONG).show();
+            }
+        }catch (SQLException e){
+            System.out.println(e);
+        }
+        db.close();
+    }
+    public void getEmpleadosData(){
+        AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        try {
+            Cursor sql = db.rawQuery("Select * "+
+                            "from Empleado ",
+                    null);
+            if(sql.moveToFirst()){
+                while (!sql.isAfterLast()) {
+                    empleados.add(new Empleado(
+                            sql.getInt(0),
+                            sql.getString(1),
+                            sql.getString(2),
+                            sql.getString(3),
+                            sql.getString(4),
+                            sql.getString(5)));
+                    sql.moveToNext();
+                }
+            }else{
+                Toast.makeText(this,"Error al obtener los datos de los Empleados",Toast.LENGTH_LONG).show();
             }
         }catch (SQLException e){
             System.out.println(e);

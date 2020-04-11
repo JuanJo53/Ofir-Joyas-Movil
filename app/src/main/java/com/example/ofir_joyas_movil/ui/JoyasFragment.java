@@ -117,12 +117,12 @@ public class JoyasFragment extends Fragment {
                 aleProd = new AlertDialog.Builder(root.getContext());
                 aleProd.setCancelable(false);
                 aleProd.setView(v);
-                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        delJoya();
-                    }
-                });
+//                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        delJoya();
+//                    }
+//                });
                 aleProd.setNeutralButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

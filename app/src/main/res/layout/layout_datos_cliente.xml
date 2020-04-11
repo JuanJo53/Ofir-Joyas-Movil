@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="6"
+    android:weightSum="9"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -108,6 +108,19 @@
             android:layout_weight="1"
             />
     </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_weight="1"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="CLIENTES REGISTRADOS"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -143,11 +156,13 @@
             android:textStyle="bold"
             />
     </LinearLayout>
-    <GridView
-        android:id="@+id/gvClientes"
+    <ListView
+        android:id="@+id/lvClientes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:numColumns="1"
+        android:choiceMode="singleChoice"
         />
 
 </LinearLayout>

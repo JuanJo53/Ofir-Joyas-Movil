@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ import java.util.Date;
 public class PedidosFragment extends Fragment {
     View root;
     AlertDialog.Builder aleProd;
-    GridView gridViewPedido;
+    ListView listViewPedido;
     ArrayList<Pedido> pedidos=new ArrayList<Pedido>();
     EditText etcodigopedido,etcliente,etempleado,etnombrejoya,etcantidad,etfechaemision;
     DatePicker dpfechaentrega;
@@ -55,9 +56,9 @@ public class PedidosFragment extends Fragment {
         getPedidoData();
         PedidoListAdapter adapter=new PedidoListAdapter(root.getContext(),pedidos);
 
-        this.gridViewPedido = (GridView)root.findViewById(R.id.gvPedidos);
-        this.gridViewPedido.setAdapter(adapter);
-        this.gridViewPedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        this.listViewPedido = (ListView) root.findViewById(R.id.lvPedidos);
+        this.listViewPedido.setAdapter(adapter);
+        this.listViewPedido.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Pedido pedido = pedidos.get(position);
@@ -104,6 +105,12 @@ public class PedidosFragment extends Fragment {
 
                     }
                 });
+//                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        delPedido(pedido.getCod_pedido());
+//                    }
+//                });
                 aleProd.setNeutralButton("Guardar Cambios", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -119,6 +126,11 @@ public class PedidosFragment extends Fragment {
     public void updateList(){
         pedidos.clear();
         getPedidoData();
+    }
+    public void delPedido(int cod){
+        AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
+        SQLiteDatabase db = admin.getWritableDatabase();
+        db.delete("Pedido","cod_Pedido='"+cod+"'",null);
     }
     public void updatePedido(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

@@ -14,11 +14,11 @@
         />
     <item
         android:id="@+id/mnuAgregarCliente"
-        android:title="Agregar Cliente"
+        android:title="Clientes"
         />
     <item
         android:id="@+id/mnuAgregarEmpleado"
-        android:title="Agregar Empleado"
+        android:title="Empleados"
         />
     <item
         android:id="@+id/mnuSalir"
