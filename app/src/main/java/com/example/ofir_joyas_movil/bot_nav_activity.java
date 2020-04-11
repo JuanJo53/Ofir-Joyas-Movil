@@ -38,6 +38,8 @@ import com.example.ofir_joyas_movil.Entidades.Cliente;
 import com.example.ofir_joyas_movil.Entidades.Empleado;
 import com.example.ofir_joyas_movil.Entidades.Venta;
 import com.example.ofir_joyas_movil.ui.JoyasFragment;
+import com.example.ofir_joyas_movil.ui.PedidosFragment;
+import com.example.ofir_joyas_movil.ui.VentasFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -80,7 +82,7 @@ public class bot_nav_activity extends AppCompatActivity {
     ArrayList<String> nombJoyas= new ArrayList<String>();
     ArrayList<Cliente> clientes= new ArrayList<Cliente>();
     ArrayList<Empleado> empleados= new ArrayList<Empleado>();
-
+    ArrayAdapter<String> adapter;
 
     final int COD_FOTO = 120;
     final String CARPETA_RAIZ = "MisFotosApp";
@@ -129,7 +131,6 @@ public class bot_nav_activity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         LayoutInflater inflador;
-        ArrayAdapter<String> adapter;
         View v;
         Date fechaActual= Calendar.getInstance().getTime();
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
@@ -216,8 +217,6 @@ public class bot_nav_activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         agregarVenta();
-                        JoyasFragment fragment=new JoyasFragment();
-                        fragment.updateList();
                     }
                 });
                 aleProd.show();
@@ -450,6 +449,7 @@ public class bot_nav_activity extends AppCompatActivity {
     public void updateEmpleadoList(){
         empleados.clear();
         getEmpleadosData();
+        adapter.notifyDataSetChanged();
     }
     public void delByCod(int cod,String tabla){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);

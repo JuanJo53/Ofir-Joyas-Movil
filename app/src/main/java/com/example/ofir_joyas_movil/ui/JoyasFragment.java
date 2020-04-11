@@ -59,6 +59,7 @@ public class JoyasFragment extends Fragment {
     Spinner sptipo;
     View root;
     ArrayList<String> tipos_joya= new ArrayList<String>();
+    JoyaListAdapter adapter;
 
     final int COD_FOTO = 120;
     final String CARPETA_RAIZ = "MisFotosApp";
@@ -73,7 +74,7 @@ public class JoyasFragment extends Fragment {
         getJoyaData();
 
         getJoyaTiposSpinner();
-        JoyaListAdapter adapter=new JoyaListAdapter(root.getContext(),joyas);
+        adapter=new JoyaListAdapter(root.getContext(),joyas);
 
         this.gridViewJoyas = (GridView)root.findViewById(R.id.gvJoyas);
         this.gridViewJoyas.setAdapter(adapter);
@@ -100,8 +101,8 @@ public class JoyasFragment extends Fragment {
                 etstockjoya = (EditText)v.findViewById(R.id.etStockJoya);
 
                 sptipo = (Spinner)v.findViewById(R.id.spTipoJoya);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos_joya);
-                sptipo.setAdapter(adapter);
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, tipos_joya);
+                sptipo.setAdapter(adapter1);
 
                 ImageView foto=(ImageView)view.findViewById(R.id.ivJoya);
                 ivFoto.setImageDrawable(foto.getDrawable());
@@ -144,6 +145,7 @@ public class JoyasFragment extends Fragment {
     public void updateList(){
         joyas.clear();
         getJoyaData();
+        adapter.notifyDataSetChanged();
     }
     public void delJoya(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

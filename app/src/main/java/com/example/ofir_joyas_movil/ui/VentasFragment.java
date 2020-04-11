@@ -47,6 +47,7 @@ public class VentasFragment extends Fragment {
     ArrayList<String> nombJoyas= new ArrayList<String>();
     EditText etcodigoventa,etcliente,etempleado,etcantidad,etcosto,etfecha;
     Spinner spJoyas;
+    VentaListAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class VentasFragment extends Fragment {
 
         getVentaData();
         getJoyasNombsSpinner();
-        VentaListAdapter adapter=new VentaListAdapter(root.getContext(),ventas);
+        adapter=new VentaListAdapter(root.getContext(),ventas);
 
         this.listViewVentas = (ListView)root.findViewById(R.id.lvVentas);
         this.listViewVentas.setAdapter(adapter);
@@ -76,8 +77,8 @@ public class VentasFragment extends Fragment {
                 etcliente.setText(getCI(venta.getCod_cliente(),"Cliente"));
                 etempleado.setText(getCI(venta.getCod_empleado(),"Empleado"));
                 spJoyas = (Spinner)v.findViewById(R.id.etNombreJoyaDet);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, nombJoyas);
-                spJoyas.setAdapter(adapter);
+                ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, nombJoyas);
+                spJoyas.setAdapter(adapter1);
                 spJoyas.setSelection(venta.getCod_joya()-1);
                 etcantidad.setText(String.valueOf(venta.getCantidad()));
                 etcosto.setText(venta.getTotal().toString());
@@ -113,6 +114,7 @@ public class VentasFragment extends Fragment {
     public void updateList(){
         ventas.clear();
         getVentaData();
+        adapter.notifyDataSetChanged();
     }
     public void delVenta(int cod){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);

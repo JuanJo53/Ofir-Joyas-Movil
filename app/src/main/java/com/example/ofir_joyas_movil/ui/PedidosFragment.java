@@ -1,6 +1,7 @@
 package com.example.ofir_joyas_movil.ui;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -45,7 +46,7 @@ public class PedidosFragment extends Fragment {
     DatePicker dpfechaentrega;
     Spinner spestado;
     ArrayList<String> estado= new ArrayList<String>();
-
+    PedidoListAdapter adapter;
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_pedidos, container, false);
@@ -54,7 +55,7 @@ public class PedidosFragment extends Fragment {
         estado.add("Por Entregar");
         estado.add("Entregado");
         getPedidoData();
-        PedidoListAdapter adapter=new PedidoListAdapter(root.getContext(),pedidos);
+        adapter=new PedidoListAdapter(root.getContext(),pedidos);
 
         this.listViewPedido = (ListView) root.findViewById(R.id.lvPedidos);
         this.listViewPedido.setAdapter(adapter);
@@ -71,8 +72,8 @@ public class PedidosFragment extends Fragment {
                 etnombrejoya = (EditText) v.findViewById(R.id.etJoyaPedDet);
                 etcantidad = (EditText)v.findViewById(R.id.etCantidadDetPed);
                 spestado = (Spinner)v.findViewById(R.id.spEstado);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, estado);
-                spestado.setAdapter(adapter);
+                final ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(root.getContext(), android.R.layout.simple_spinner_dropdown_item, estado);
+                spestado.setAdapter(adapter1);
                 etfechaemision = (EditText)v.findViewById(R.id.etFechaEmisionDet);
                 dpfechaentrega = (DatePicker)v.findViewById(R.id.etFechaEntregaDet);
                 etcodigopedido.setText(String.valueOf(pedido.getCod_pedido()));
@@ -126,6 +127,7 @@ public class PedidosFragment extends Fragment {
     public void updateList(){
         pedidos.clear();
         getPedidoData();
+        adapter.notifyDataSetChanged();
     }
     public void delPedido(int cod){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
