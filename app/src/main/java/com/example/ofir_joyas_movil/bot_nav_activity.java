@@ -21,26 +21,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.example.ofir_joyas_movil.Adaptadores.ClienteListAdapter;
-import com.example.ofir_joyas_movil.Adaptadores.EmpleadoListAdapter;
-import com.example.ofir_joyas_movil.Entidades.Cliente;
-import com.example.ofir_joyas_movil.Entidades.Empleado;
-import com.example.ofir_joyas_movil.Entidades.Venta;
-import com.example.ofir_joyas_movil.ui.JoyasFragment;
-import com.example.ofir_joyas_movil.ui.PedidosFragment;
-import com.example.ofir_joyas_movil.ui.VentasFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,6 +41,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
+import com.example.ofir_joyas_movil.Adaptadores.ClienteListAdapter;
+import com.example.ofir_joyas_movil.Adaptadores.EmpleadoListAdapter;
+import com.example.ofir_joyas_movil.Entidades.Cliente;
+import com.example.ofir_joyas_movil.Entidades.Empleado;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -455,6 +449,8 @@ public class bot_nav_activity extends AppCompatActivity {
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
         db.delete(tabla,"cod_"+tabla+"='"+cod+"'",null);
+        //String sql1="DELETE FROM sqlite_sequence WHERE name = '"+tabla+"'";
+        //db.execSQL(sql1);
     }
     public void updateEmpleado(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);

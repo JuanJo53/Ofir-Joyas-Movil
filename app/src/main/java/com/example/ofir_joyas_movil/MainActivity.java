@@ -1,23 +1,19 @@
 package com.example.ofir_joyas_movil;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.*;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.ofir_joyas_movil.Adaptadores.JoyaListAdapter;
-
-import java.util.*;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     TextView tvusername, tvpassword;
@@ -89,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
            Cursor sql = db.rawQuery("Select Cod_Empleado, Nombre, Contraseña " +
                            "from Empleado " +
                            "where Nombre="+"'"+user+"' "+
-                           " and Contraseña="+"'"+pass+"'",
+                           "and Contraseña="+"'"+pass+"'",
                    null);
            if(sql.moveToFirst()){
                Toast.makeText(getApplicationContext(),"Bienvenido "+ sql.getString(1),Toast.LENGTH_LONG).show();
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                intent.putExtra("CodEmpleado",sql.getInt(0));
                startActivity(intent);
            }else{
-               Toast.makeText(getApplicationContext(),"No Logeado",Toast.LENGTH_LONG).show();
+               Toast.makeText(getApplicationContext(),"Usuario o Contraseña Incorrectos",Toast.LENGTH_LONG).show();
            }
        }catch (SQLException e){
            System.out.println(e);

@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,30 +12,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
-import com.example.ofir_joyas_movil.Adaptadores.JoyaListAdapter;
 import com.example.ofir_joyas_movil.Adaptadores.VentaListAdapter;
 import com.example.ofir_joyas_movil.AdminDataBase;
-import com.example.ofir_joyas_movil.Entidades.Joya;
 import com.example.ofir_joyas_movil.Entidades.Venta;
 import com.example.ofir_joyas_movil.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class VentasFragment extends Fragment {
     View root;
