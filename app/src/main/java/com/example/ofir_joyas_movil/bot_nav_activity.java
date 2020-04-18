@@ -37,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -46,6 +47,7 @@ import com.example.ofir_joyas_movil.Adaptadores.ClienteListAdapter;
 import com.example.ofir_joyas_movil.Adaptadores.EmpleadoListAdapter;
 import com.example.ofir_joyas_movil.Entidades.Cliente;
 import com.example.ofir_joyas_movil.Entidades.Empleado;
+import com.example.ofir_joyas_movil.Entidades.Joya;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.ByteArrayOutputStream;
@@ -84,17 +86,20 @@ public class bot_nav_activity extends AppCompatActivity {
     final String RUTA_IMAGEN = CARPETA_RAIZ + CARPETA_IMAGENES;
     String path;
     int cod_empleado;
+    NavController navController;
+    BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bot_nav_activity);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -154,7 +159,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
 //                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -167,6 +172,7 @@ public class bot_nav_activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         agregarJoya();
+                        navController.navigate(R.id.navigation_home);
                     }
                 });
                 aleProd.show();
@@ -199,6 +205,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+//                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
 //                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -211,6 +218,7 @@ public class bot_nav_activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         agregarVenta();
+                        navController.navigate(R.id.navigation_dashboard);
                     }
                 });
                 aleProd.show();
@@ -244,7 +252,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
 //                aleProd.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -257,6 +265,7 @@ public class bot_nav_activity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         agregarPedido();
+                        navController.navigate(R.id.navigation_notifications);
                     }
                 });
                 aleProd.show();
@@ -318,6 +327,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
                 aleProd.show();
@@ -356,7 +366,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 aleProd.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+//                        Toast.makeText(getApplicationContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
                 aleProd.setNegativeButton("Guardar Cambios", new DialogInterface.OnClickListener() {
@@ -443,8 +453,9 @@ public class bot_nav_activity extends AppCompatActivity {
     public void updateEmpleadoList(){
         empleados.clear();
         getEmpleadosData();
-        adapter.notifyDataSetChanged();
     }
+
+
     public void delByCod(int cod,String tabla){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
@@ -462,6 +473,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 values.put("CI",etciempleado.getText().toString());
                 values.put("Telefono",ettelefonoempleado.getText().toString());
                 values.put("Cargo",etcargoempleado.getText().toString());
+                values.put("Contraseña",etcontraempelado.getText().toString());
                 db.update("Empleado",values,"cod_Empleado='"+etcodempleado.getText().toString()+"'",null);
                 Toast.makeText(this,"Datos de Empleado Actualizados!",Toast.LENGTH_LONG).show();
             }else{
@@ -639,6 +651,9 @@ public class bot_nav_activity extends AppCompatActivity {
     public void getClientesData(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!clientes.isEmpty()){
+            clientes.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select * "+
                             "from Cliente ",
@@ -664,6 +679,9 @@ public class bot_nav_activity extends AppCompatActivity {
     public void getEmpleadosData(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!empleados.isEmpty()){
+            empleados.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select * "+
                             "from Empleado ",

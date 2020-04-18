@@ -129,7 +129,7 @@ public class JoyasFragment extends Fragment {
                 aleProd.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+//                        Toast.makeText(root.getContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
                 aleProd.show();
@@ -187,6 +187,9 @@ public class JoyasFragment extends Fragment {
     public void getJoyaData(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!joyas.isEmpty()){
+            joyas.clear();
+        }
         byte[] imagen;
         try {
             Cursor sql = db.rawQuery("Select * "+

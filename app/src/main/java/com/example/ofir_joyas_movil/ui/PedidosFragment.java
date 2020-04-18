@@ -94,7 +94,7 @@ public class PedidosFragment extends Fragment {
                 aleProd.setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+//                        Toast.makeText(root.getContext(),"No se guardo!",Toast.LENGTH_LONG).show();
                     }
                 });
 //                aleProd.setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -180,6 +180,9 @@ public class PedidosFragment extends Fragment {
     public void getPedidoData(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!pedidos.isEmpty()){
+            pedidos.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select * "+
                             "from Pedido ",
