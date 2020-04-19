@@ -191,6 +191,9 @@ public class VentasFragment extends Fragment {
     public void getJoyasNombsSpinner(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!nombJoyas.isEmpty()){
+            nombJoyas.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select Nombre "+
                             "from Joya ",

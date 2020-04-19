@@ -230,6 +230,9 @@ public class JoyasFragment extends Fragment {
     public void getJoyaTiposSpinner(){
         AdminDataBase admin = new AdminDataBase(root.getContext(),"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!tipos_joya.isEmpty()){
+            tipos_joya.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select tipo "+
                             "from Tipo_Joya ",

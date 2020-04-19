@@ -189,6 +189,7 @@ public class bot_nav_activity extends AppCompatActivity {
                 etcostoventa = (EditText)v.findViewById(R.id.etCostoDet);
                 etfechaventa = (EditText)v.findViewById(R.id.etFechaDet);
 
+                getJoyasNombsSpinner();
                 spJoyas = (Spinner)v.findViewById(R.id.etNombreJoyaDet);
                 adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, nombJoyas);
                 spJoyas.setAdapter(adapter);
@@ -797,6 +798,9 @@ public class bot_nav_activity extends AppCompatActivity {
     public void getJoyasNombsSpinner(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!nombJoyas.isEmpty()){
+            nombJoyas.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select Nombre "+
                             "from Joya ",
@@ -818,6 +822,9 @@ public class bot_nav_activity extends AppCompatActivity {
     public void getJoyaTiposSpinner(){
         AdminDataBase admin = new AdminDataBase(this,"administracion",null,1);
         SQLiteDatabase db = admin.getWritableDatabase();
+        if(!tipos_joya.isEmpty()){
+            tipos_joya.clear();
+        }
         try {
             Cursor sql = db.rawQuery("Select tipo "+
                             "from Tipo_Joya ",
